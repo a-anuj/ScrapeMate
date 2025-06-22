@@ -5,7 +5,7 @@ groq
 bs4
 requests
 sentence-transformers
-chromadb
+faiss-cpu
 tqdm
 aiohttp
 nest_asyncio

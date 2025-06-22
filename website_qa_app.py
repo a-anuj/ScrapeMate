@@ -7,7 +7,7 @@ from groq import Groq
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceBgeEmbeddings
-from langchain.vectorstores import Chroma
+from langchain.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
@@ -50,7 +50,7 @@ with st.form("prompt-form"):
         document = text_splitter.split_documents(document)
         embedding = HuggingFaceBgeEmbeddings(model_name="BAAI/bge-small-en-v1.5")
 
-        db = Chroma.from_documents(document,embedding)
+        db = FAISS.from_documents(document,embedding)
 
         prompt = ChatPromptTemplate.from_template("""
         Answer the following question based on the provided context
