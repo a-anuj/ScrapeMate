@@ -57,7 +57,6 @@ with st.form("prompt-form"):
         <context>
         {context}
         </context>
-        Answer in **one or two short sentences**:
         Question : {input}""")
         document_chain = create_stuff_documents_chain(llm,prompt)
 
