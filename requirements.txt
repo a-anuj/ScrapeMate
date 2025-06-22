@@ -1,0 +1,12 @@
+streamlit
+langchain
+langchain-community
+groq
+bs4
+requests
+sentence-transformers
+chromadb
+tqdm
+aiohttp
+nest_asyncio
+python-dotenv
