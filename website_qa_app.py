@@ -42,9 +42,11 @@ st.title("🕸️ ScrapeMate")
 st.markdown("###### Paste a link. Ask anything. Get a smart answer — not a dumb search")
 st.markdown("---")
 st.markdown("#### ⚡ Zap your doubts")
+
+
 with st.form("prompt-form"):
-    user_prompt_webaddress = st.text_input("🔗Enter the web address")
-    user_prompt_question = st.text_input("💬Enter the question")
+    user_prompt_webaddress = st.text_input("🔗 Enter the web address")
+    user_prompt_question = st.text_input("💬 Enter the question")
     col1,_,col2 = st.columns([3,2,2])
     with col1:
         submitted = st.form_submit_button("🔍Search")
