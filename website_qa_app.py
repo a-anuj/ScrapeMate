@@ -37,11 +37,14 @@ class GroqLLM:
 # Initialize like this
 llm = GroqLLM(client, "llama-3.3-70b-versatile")
 
-
+st.title("🕸️ ScrapeMate")
+st.markdown("###### Paste a link. Ask anything. Get a smart answer — not a dumb search")
+st.markdown("---")
+st.markdown("#### ⚡ Zap your doubts")
 with st.form("prompt-form"):
-    user_prompt_webaddress = st.text_input("Enter the web address")
-    user_prompt_question = st.text_input("Enter the question")
-    submitted = st.form_submit_button("Submit")
+    user_prompt_webaddress = st.text_input("🔗Enter the web address")
+    user_prompt_question = st.text_input("💬Enter the question")
+    submitted = st.form_submit_button("🔍Search")
     
     if submitted:
         loader = WebBaseLoader(web_paths=(user_prompt_webaddress,))
