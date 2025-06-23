@@ -22,6 +22,7 @@ No signups. No fees. Just paste a URL and zap your doubts ⚡
 - ⚡  Uses Groq’s blazing-fast LLM for responses  
 - 🧠 Powered by RAG — not generic pre-trained fluff  
 - 🌈 Clean Streamlit UI with good vibes  
+- ⚡  Summarize the webpage super-fast
 
 ## 💡Real-World Use Cases
 - Ask detailed questions about legal or privacy pages
