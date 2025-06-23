@@ -13,6 +13,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
 import streamlit as st
 from dotenv import load_dotenv
+import trafilatura
 load_dotenv()
 
 
@@ -44,7 +45,11 @@ st.markdown("#### ⚡ Zap your doubts")
 with st.form("prompt-form"):
     user_prompt_webaddress = st.text_input("🔗Enter the web address")
     user_prompt_question = st.text_input("💬Enter the question")
-    submitted = st.form_submit_button("🔍Search")
+    col1,_,col2 = st.columns([3,2,2])
+    with col1:
+        submitted = st.form_submit_button("🔍Search")
+    with col2:
+        summary = st.form_submit_button("Summarize the page")
     
     if submitted:
         loader = WebBaseLoader(web_paths=(user_prompt_webaddress,))
@@ -69,10 +74,21 @@ with st.form("prompt-form"):
         response = retrieval_chain.invoke({"input" : user_prompt_question})
         st.write(response['answer'])
 
+    if summary:
+        url = user_prompt_webaddress
+        downloaded = trafilatura.fetch_url(url)
+        if downloaded:
+            document = trafilatura.extract(downloaded)
+        else:
+            print("Failed to fetch content!")
+        
+        prompt = ChatPromptTemplate.from_template("""
+        Summarize the whole text given below with bullet points wherever necessary  
+        text : {document}""")
 
+        formatted_prompt = prompt.format(document=document)
 
-
-
-
-
+        print(document)
+        response = llm(formatted_prompt)
+        st.write(response)
 
