@@ -12,3 +12,4 @@ nest_asyncio
 python-dotenv
 protobuf==3.20.*
 trafilatura
+langchain-classic
