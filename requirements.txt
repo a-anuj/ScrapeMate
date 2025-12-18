@@ -1,6 +1,9 @@
 streamlit
-langchain
-langchain-community
+
+langchain>=0.1.17
+langchain-core>=0.1.33
+langchain-community>=0.0.30
+
 groq
 bs4
 requests
@@ -12,4 +15,3 @@ nest_asyncio
 python-dotenv
 protobuf==3.20.*
 trafilatura
-langchain-classic
