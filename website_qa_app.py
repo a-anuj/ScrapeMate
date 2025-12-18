@@ -8,13 +8,11 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_classic.chains.combine_documents import create_stuff_documents_chain
-from langchain.chains import create_retrieval_chain
 import streamlit as st
 from dotenv import load_dotenv
 import trafilatura
 load_dotenv()
+import langchain
 
 
 
@@ -53,28 +51,48 @@ with st.form("prompt-form"):
     with col2:
         summary = st.form_submit_button("Summarize the page")
     
-    if submitted:
-        loader = WebBaseLoader(web_paths=(user_prompt_webaddress,))
-        document = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500,chunk_overlap=100)
-        document = text_splitter.split_documents(document)
-        embedding = HuggingFaceBgeEmbeddings(model_name="BAAI/bge-small-en-v1.5")
+if submitted:
+    # 1. Load webpage
+    loader = WebBaseLoader(web_paths=(user_prompt_webaddress,))
+    documents = loader.load()
 
-        db = FAISS.from_documents(document,embedding)
+    # 2. Split text
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=500,
+        chunk_overlap=100
+    )
+    documents = text_splitter.split_documents(documents)
 
-        prompt = ChatPromptTemplate.from_template("""
-        Answer the following question based on the provided context
-        <context>
-        {context}
-        </context>
-        Question : {input}""")
-        document_chain = create_stuff_documents_chain(llm,prompt)
+    # 3. Create embeddings + vector store
+    embedding = HuggingFaceBgeEmbeddings(
+        model_name="BAAI/bge-small-en-v1.5"
+    )
+    db = FAISS.from_documents(documents, embedding)
 
-        retriever = db.as_retriever()
+    # 4. Retrieve relevant chunks
+    retriever = db.as_retriever()
+    docs = retriever.invoke(user_prompt_question)
 
-        retrieval_chain = create_retrieval_chain(retriever,document_chain)
-        response = retrieval_chain.invoke({"input" : user_prompt_question})
-        st.write(response['answer'])
+    # 5. Build context manually
+    context = "\n\n".join(doc.page_content for doc in docs)
+
+    # 6. Create prompt
+    prompt = f"""
+    Answer the following question based on the provided context.
+
+    Context:
+    {context}
+
+    Question:
+    {user_prompt_question}
+    """
+
+    # 7. Call LLM
+    response = llm(prompt)
+
+    # 8. Display answer
+    st.write(response)
+
 
     if summary:
         url = user_prompt_webaddress
